@@ -1,0 +1,1 @@
+This is Swift notes for understanding the apple develepment documentation.
