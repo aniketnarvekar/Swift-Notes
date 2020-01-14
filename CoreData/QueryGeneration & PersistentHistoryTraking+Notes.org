@@ -17,7 +17,7 @@
 
 ** If you're using persistent history traking and query generation for _filtering transaction_ then set 'automaticallyMergesChangesFromParent' to *false* (in main and background managed object context) for more see [[automaticallyMergesChangesFromParent][here]].
    :PROPERTIES:
-   :CUSTOM-ID: mrgpar
+   :CUSTOM_ID: mrgpar
    :END:
 
 ** We can Set query generation to current QueryGenerationToken in view controller _before_ fetched results controller's *performFetch* method is callled (after [[#mrgpar][above]] step) and for update viewcontext called menthods describe in [[https://developer.apple.com/documentation/coredata/accessing_data_when_the_store_has_changed#see-also][Accessing Data When the Store Has Changed]] of section *Update Your View Context to the Current Store Generation*.
