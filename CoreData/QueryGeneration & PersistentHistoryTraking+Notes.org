@@ -11,15 +11,15 @@
 
 * Notes
 
-** When Creating persisntent container in your app's delegate, should set the NSPersistentHistoryTrakingKey option on store description to true and also toggle store Description option to enabling remote change notifications to true  _before loading persistent container_.
+  1. When Creating persisntent container in your app's delegate, should set the NSPersistentHistoryTrakingKey option on store description to true and also toggle store Description option to enabling remote change notifications to true  _before loading persistent container_.
 
-** _After_ persistent container is successfully loaded, we can set persistent container's viewcontext additional nodification like merge policy, undo manager, should delete inaccesible faults.
+  2. _After_ persistent container is successfully loaded, we can set persistent container's viewcontext additional nodification like merge policy, undo manager, should delete inaccesible faults.
 
-** If you're using persistent history traking and query generation for _filtering transaction_ then set 'automaticallyMergesChangesFromParent' to *false* (in main and background managed object context) for more see [[automaticallyMergesChangesFromParent][here]].
+  3. If you're using persistent history traking and query generation for _filtering transaction_ then set 'automaticallyMergesChangesFromParent' to *false* (in main and background managed object context) for more see [[automaticallyMergesChangesFromParent][here]].
    :PROPERTIES:
    :CUSTOM_ID: mrgpar
    :END:
 
-** We can Set query generation to current QueryGenerationToken in view controller _before_ fetched results controller's *performFetch* method is callled (after [[#mrgpar][above]] step) and for update viewcontext called menthods describe in [[https://developer.apple.com/documentation/coredata/accessing_data_when_the_store_has_changed#see-also][Accessing Data When the Store Has Changed]] of section *Update Your View Context to the Current Store Generation*.
+  4. We can Set query generation to current QueryGenerationToken in view controller _before_ fetched results controller's *performFetch* method is callled (after [[#mrgpar][above]] step) and for update viewcontext called menthods describe in [[https://developer.apple.com/documentation/coredata/accessing_data_when_the_store_has_changed#see-also][Accessing Data When the Store Has Changed]] of section *Update Your View Context to the Current Store Generation*.
 
-** If you wanna filter transaction related to view for stable UI as showen in *Filter for Transactions Relevant to the View* section in [[https://developer.apple.com/documentation/coredata/consuming_relevant_store_changes][Consuming Relevant Store Changes]] it may be done in NSManagedObjectDidSave Notification in NotificationCenter. 
+  5. If you wanna filter transaction related to view for stable UI as showen in *Filter for Transactions Relevant to the View* section in [[https://developer.apple.com/documentation/coredata/consuming_relevant_store_changes][Consuming Relevant Store Changes]] it may be done in NSManagedObjectDidSave Notification in NotificationCenter. 
