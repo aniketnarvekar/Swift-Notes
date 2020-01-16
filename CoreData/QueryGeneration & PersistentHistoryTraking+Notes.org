@@ -1,25 +1,36 @@
 #+TITLE: QUERY GENERATION & PERSISTENT HISTORY TRAKING.
 
-* Reference
-  :PROPERTIES:
-  :CUSTOM-ID: refference
-  :END:
-
-  1. [[https://developer.apple.com/documentation/coredata/accessing_data_when_the_store_has_changed][Accessing Data When the Store Has Changed]].
-
-  2. [[https://developer.apple.com/documentation/coredata/consuming_relevant_store_changes][Consuming Relevant Store Changes]].
-
 * Notes
 
   1. When Creating persisntent container in your app's delegate, should set the NSPersistentHistoryTrakingKey option on store description to true and also toggle store Description option to enabling remote change notifications to true  _before loading persistent container_.
 
   2. _After_ persistent container is successfully loaded, we can set persistent container's viewcontext additional nodification like merge policy, undo manager, should delete inaccesible faults.
 
-  3. If you're using persistent history traking and query generation for _filtering transaction_ then set 'automaticallyMergesChangesFromParent' to *false* (in main and background managed object context) for more see [[automaticallyMergesChangesFromParent][here]].
-   :PROPERTIES:
-   :CUSTOM_ID: mrgpar
-   :END:
+  3. If you're using persistent history traking and query generation for _filtering transaction_ then set 'automaticallyMergesChangesFromParent' to *false* (in main and background managed object context) for more see [[https://developer.apple.com/documentation/coredata/nsmanagedobjectcontext/1845237-automaticallymergeschangesfrompa][here]].
 
-  4. We can Set query generation to current QueryGenerationToken in view controller _before_ fetched results controller's *performFetch* method is callled (after [[#mrgpar][above]] step) and for update viewcontext called menthods describe in [[https://developer.apple.com/documentation/coredata/accessing_data_when_the_store_has_changed#see-also][Accessing Data When the Store Has Changed]] of section *Update Your View Context to the Current Store Generation*.
+  4. We can Set query generation to current QueryGenerationToken in view controller _before_ fetched results controller's *performFetch* method is callled (after performing steps described in note 2) and for update viewcontext called menthods describe in [[https://developer.apple.com/documentation/coredata/accessing_data_when_the_store_has_changed#see-also][Accessing Data When the Store Has Changed]] of section *Update Your View Context to the Current Store Generation*.
 
-  5. If you wanna filter transaction related to view for stable UI as showen in *Filter for Transactions Relevant to the View* section in [[https://developer.apple.com/documentation/coredata/consuming_relevant_store_changes][Consuming Relevant Store Changes]] it may be done in NSManagedObjectDidSave Notification in NotificationCenter. 
+  5. If you wanna filter transaction related to view for stable UI as showen in *Filter for Transactions Relevant to the View* section in [[https://developer.apple.com/documentation/coredata/consuming_relevant_store_changes][Consuming Relevant Store Changes]] it may be done in NSManagedObjectDidSave Notification in NotificationCenter.
+
+  6. After filtering relevant transactions should merge each transaction to _registered managed object context_ in NSFetchedResultsController using objectIdNotification() method.
+
+  7. If merge changes are done by manged object context whoes _not registered_ in fetched results controller then fetched results controller delegate methods are not get called (User Interface will not refresh).
+
+  8. If may want to reload data using animation like insert, delete, update then *NSFetchedResultsControllerDelegate* may create exception like 'NSTableView error inserting/removing/moving row 3 (numberOfRows: 1)' (this time we are using NSTabelView with fetchedResultsController) because merge changes from context did save method perform operations asyncronously and  controller(_ controller:, didChange anObject:, at indexPath:,for type:,newIndexPath:) may not give sequential indexpath.
+
+  9. Alternatively we can destinguish between operation usign flags as *User* and *Server* driven, we can directly reload data when *Server* drivn flag is raised and perform aniamtion when *User* driven flag is raised as shown in [[https://developer.apple.com/documentation/coredata/nsfetchedresultscontrollerdelegate][NSFetchedResultsControllerDelegate]].
+
+* Reference
+  :PROPERTIES:
+  :CUSTOM-ID: refference
+  :END:
+  
+  - [[https://developer.apple.com/documentation/coredata/accessing_data_when_the_store_has_changed][Accessing Data When the Store Has Changed]].
+
+  - [[https://developer.apple.com/documentation/coredata/consuming_relevant_store_changes][Consuming Relevant Store Changes]].
+
+  - Fetched Results Controller Delegate.
+
+    - [[https://stackoverflow.com/questions/55976212/why-does-nstableview-crash-when-processing-deleted-rows-as-nsfetchedresultscontr][Why does NSTableView crash when processing deleted rows as NSFetchedResultsControllerDelegate?]]
+
+    - [[https://developer.apple.com/documentation/coredata/nsfetchedresultscontrollerdelegate][NSFetchedResultsControllerDelegate]].
